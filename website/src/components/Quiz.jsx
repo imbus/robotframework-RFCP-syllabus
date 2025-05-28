@@ -53,6 +53,7 @@ export default function Quiz(props) {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     startQuiz();
+    setColorsDependingOnTheme();
     return () => observer.disconnect();
 
   });
