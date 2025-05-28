@@ -27,20 +27,25 @@ export default function Quiz(props) {
     quizdown.register(quizdownHighlight).createApp(props.question, node, config);
   };
 
+
+  const setColorsDependingOnTheme = () => {
+    const theme = document.documentElement.getAttribute('data-theme');
+    if (theme === 'light') {
+      document.documentElement.style.setProperty('--quizdownSecondaryColor', "var(--ifm-color-emphasis-200)");
+      document.documentElement.style.setProperty('--quizdownTextColor', "black");
+    } else {
+      document.documentElement.style.setProperty('--quizdownSecondaryColor', "var(--ifm-background-surface-color)");
+      document.documentElement.style.setProperty('--quizdownTextColor', "var(--ifm-color-primary)");
+    }
+  }
+
   useEffect(() => {
 
     // To set the color scheme of quizdown
     document.documentElement.style.setProperty('--quizdownPrimaryColor', "var(--ifm-color-primary)");
 
     const observer = new MutationObserver(() => {
-      const theme = document.documentElement.getAttribute('data-theme');
-      if (theme === 'light') {
-        document.documentElement.style.setProperty('--quizdownSecondaryColor', "var(--ifm-color-emphasis-200)");
-        document.documentElement.style.setProperty('--quizdownTextColor', "black");
-      } else {
-        document.documentElement.style.setProperty('--quizdownSecondaryColor', "var(--ifm-background-surface-color)");
-        document.documentElement.style.setProperty('--quizdownTextColor', "var(--ifm-color-primary)");
-      }
+      setColorsDependingOnTheme();
     });
 
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
