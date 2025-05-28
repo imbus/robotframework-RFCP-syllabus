@@ -26,16 +26,18 @@ export default function Quiz(props) {
     quizdownHighlight.registerHljsLanguage("robot", hljsDefineRobot);
     quizdown.register(quizdownHighlight).createApp(props.question, node, config);
   };
-
-
+  
+  
   const setColorsDependingOnTheme = () => {
     const theme = document.documentElement.getAttribute('data-theme');
     if (theme === 'light') {
       document.documentElement.style.setProperty('--quizdownSecondaryColor', "var(--ifm-color-emphasis-200)");
       document.documentElement.style.setProperty('--quizdownTextColor', "black");
+      quizdownHighlight.setTheme("https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/stackoverflow-light.min.css");
     } else {
       document.documentElement.style.setProperty('--quizdownSecondaryColor', "var(--ifm-background-surface-color)");
       document.documentElement.style.setProperty('--quizdownTextColor', "var(--ifm-color-primary)");
+      quizdownHighlight.setTheme("https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/androidstudio.min.css");
     }
   }
 
@@ -56,7 +58,7 @@ export default function Quiz(props) {
   });
 
   return (
-    < span id="quizDownContainer">
+    < span id="quizDownContainer" className='quizdown'>
     </span >
   );
 }

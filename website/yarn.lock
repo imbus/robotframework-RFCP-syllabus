@@ -7964,10 +7964,10 @@ quick-lru@^5.1.1:
   resolved "https://registry.npmjs.org/quick-lru/-/quick-lru-5.1.1.tgz"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-quizdown-extended@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/quizdown-extended/-/quizdown-extended-0.6.2.tgz#db13f26b8e649a60cecc1dc53d1c113a865d4606"
-  integrity sha512-SEossdo1wHlu3KnaHDOdQx1rlxCYIEp8SE4yF2Gh9Sid3NCwoP5loQXwDls4TwQWP1a5A2wji9qUzpccF2bn/A==
+quizdown-extended@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/quizdown-extended/-/quizdown-extended-0.6.3.tgz#36f3bd93b696ead26b9505c01ef2bcc51abd084b"
+  integrity sha512-MRT1lMwaQm6q3H/OXfbTkR5fm29Ykw3DrODwH+pTeXBdXtmWUjKAJJ+wclNZWTYNO6/j/LQ8ENqVYsfx8meGWg==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.35"
     "@fortawesome/free-solid-svg-icons" "^5.15.3"
