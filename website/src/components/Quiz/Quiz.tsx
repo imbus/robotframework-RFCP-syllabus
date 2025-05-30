@@ -1,11 +1,18 @@
+// @ts-ignore
+// eslint-disable @typescript-eslint/no-var-requires
+
+
 import React from 'react';
 import { useEffect } from 'react';
 import 'quizdown-extended'
-import hljsDefineRobot from '../robot';
+import useQuizStore from './QuizStore';
+import hljsDefineRobot from '../../robot';
 import 'quizdown-extended/public/build/extensions/quizdownHighlight';
 
 export default function Quiz(props) {
-
+  
+  const { quiz, addQuiz } = useQuizStore();
+  
   const startQuiz = () => {
     let node = document.querySelector('#quizDownContainer');
 
@@ -40,8 +47,15 @@ export default function Quiz(props) {
       quizdownHighlight.setTheme("https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/androidstudio.min.css");
     }
   }
-
+  
   useEffect(() => {
+
+
+    // Add quiz to the central storage
+    let currentPage = window.location.pathname;
+    currentPage = currentPage.replace("/robotframework-RFCP-syllabus/docs/", ""); // Remove beginning of the url
+    currentPage = currentPage.replace("/", ".")
+    addQuiz(currentPage, props.name);
 
     // To set the color scheme of quizdown
     document.documentElement.style.setProperty('--quizdownPrimaryColor', "var(--ifm-color-primary)");
