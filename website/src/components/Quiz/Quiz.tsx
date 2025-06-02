@@ -10,16 +10,16 @@ import hljsDefineRobot from '../../robot';
 import 'quizdown-extended/public/build/extensions/quizdownHighlight';
 
 export default function Quiz(props) {
-  
+
   const { quiz, addQuiz } = useQuizStore();
-  
+
   const startQuiz = () => {
     let node = document.querySelector('#quizDownContainer');
 
     const config = {
       startOnLoad: true,          // detect and convert all div html elements with class quizdown
       shuffleAnswers: true,       // shuffle answers for each question
-      shuffleQuestions: false,    // shuffle questions for each quiz
+      shuffleQuestions: true,    // shuffle questions for each quiz
       nQuestions: undefined,       // display n questions at random, if shuffleQuestions is true
       primaryColor: 'var(--quizdownPrimaryColor)',  // primary CSS color
       secondaryColor: 'var(--quizdownSecondaryColor)',  // secondary CSS color
@@ -31,10 +31,18 @@ export default function Quiz(props) {
 
 
     quizdownHighlight.registerHljsLanguage("robot", hljsDefineRobot);
-    quizdown.register(quizdownHighlight).createApp(props.question, node, config);
+    let quizDown = quizdown.register(quizdownHighlight)
+    quizDown.createApp(props.question, node, config);
+
+    console.log(quizdown);
+    quizDown.listenForStats(node, (event) => {
+      console.log(event);
+    });
+
+    return quizDown;
   };
-  
-  
+
+
   const setColorsDependingOnTheme = () => {
     const theme = document.documentElement.getAttribute('data-theme');
     if (theme === 'light') {
@@ -47,7 +55,7 @@ export default function Quiz(props) {
       quizdownHighlight.setTheme("https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/androidstudio.min.css");
     }
   }
-  
+
   useEffect(() => {
 
 
