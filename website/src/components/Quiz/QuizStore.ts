@@ -2,58 +2,72 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 // Define the interfaces
-interface QuizItem {
-  id: string;
-  page: string;
-  name: string;
+interface QuizResult {
+  id: number;
+  quizId: string;
+  timestamp: string;
+  results: {
+    numberOfQuestions: number;
+    solved: number;
+    right: number;
+    wrong: number;
+  }
 }
 
-interface QuizState {
-  quiz: QuizItem[];
-  addQuiz: (page: string, name: string) => string;
+interface Quiz {
+  quiz: QuizResult[];
+  addQuizResult: (quizId: string, numberOfQuestions: number, solved: number, right: number, wrong: number) => number;
 }
+
+const quizIdGenerator = incrementingIdGenerator();
 
 // Create the store
-const useQuizStore = create<QuizState>()(
+const useQuizStore = create<Quiz>()(
   persist(
     (set, get) => ({
       quiz: [],
-      
+
       // Action to add a new quiz
-      addQuiz: (page: string, name: string): string => {
+      addQuizResult: (quizId: string, numberOfQuestions: number, solved: number, right: number, wrong: number): number => {
         const state = get();
-        console.log("add");
-        
-        // Create a stable ID from page and name
-        const id = `${page.toLowerCase().replace(/\s+/g, '-')}#${name.toLowerCase().replace(/\s+/g, '-')}`;
-        
-        // Check if a quiz with this ID already exists
-        const existingQuiz = state.quiz.find(q => q.id === id);
-        
-        // If the quiz already exists, just return its ID
-        if (existingQuiz) {
-          return existingQuiz.id;
-        }
-        
+
+        const id : number = quizIdGenerator.next() as unknown as number;
+        const timestamp =  new Date().toISOString();
+
         // Otherwise add the new quiz
         set({
           quiz: [
             ...state.quiz,
             {
               id,
-              page,
-              name
+              quizId,
+              timestamp,
+              results: {
+                numberOfQuestions,
+                solved,
+                right,
+                wrong,
+              }
             }
           ]
         });
-        
+
         return id;
-      }
+      },
+
     }),
     {
-      name: 'quiz-storage', // unique name for localStorage
+      name: 'quiz-results', // unique name for localStorage
     }
   )
 );
+
+function* incrementingIdGenerator() {
+    let index = 0;
+    while (true) {
+        yield
+        index++;
+    }
+}
 
 export default useQuizStore;
