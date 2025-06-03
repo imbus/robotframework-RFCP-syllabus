@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 // Define the interfaces
 interface QuizResult {
-  id: number;
+  id: string;
   quizId: string;
   timestamp: string;
   results: {
@@ -16,10 +16,9 @@ interface QuizResult {
 
 interface Quiz {
   quiz: QuizResult[];
-  addQuizResult: (quizId: string, numberOfQuestions: number, solved: number, right: number, wrong: number) => number;
+  addQuizResult: (quizId: string, numberOfQuestions: number, solved: number, right: number, wrong: number) => string;
 }
 
-const quizIdGenerator = incrementingIdGenerator();
 
 // Create the store
 const useQuizStore = create<Quiz>()(
@@ -28,10 +27,11 @@ const useQuizStore = create<Quiz>()(
       quiz: [],
 
       // Action to add a new quiz
-      addQuizResult: (quizId: string, numberOfQuestions: number, solved: number, right: number, wrong: number): number => {
+      addQuizResult: (quizId: string, numberOfQuestions: number, solved: number, right: number, wrong: number): string => {
         const state = get();
 
-        const id : number = quizIdGenerator.next() as unknown as number;
+        const id : string = self.crypto.randomUUID();;
+
         const timestamp =  new Date().toISOString();
 
         // Otherwise add the new quiz
@@ -62,12 +62,5 @@ const useQuizStore = create<Quiz>()(
   )
 );
 
-function* incrementingIdGenerator() {
-    let index = 0;
-    while (true) {
-        yield
-        index++;
-    }
-}
 
 export default useQuizStore;

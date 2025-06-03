@@ -1,7 +1,6 @@
 // @ts-ignore
 // eslint-disable @typescript-eslint/no-var-requires
 
-
 import React from 'react';
 import { useEffect } from 'react';
 import 'quizdown-extended'
@@ -11,7 +10,8 @@ import 'quizdown-extended/public/build/extensions/quizdownHighlight';
 
 export default function Quiz(props) {
 
-  const { quiz, addQuiz } = useQuizStore();
+  const quiz = useQuizStore((state) => state.quiz);
+  const addQuizResult = useQuizStore((state) => state.addQuizResult);
 
   const startQuiz = () => {
     let node = document.querySelector('#quizDownContainer');
@@ -34,9 +34,8 @@ export default function Quiz(props) {
     let quizDown = quizdown.register(quizdownHighlight)
     quizDown.createApp(props.question, node, config);
 
-    console.log(quizdown);
     quizDown.listenForStats(node, (event) => {
-      console.log(event);
+      addQuizResult(generateQuizId(props.name), event.numberOfQuestions, event.solved, event.right, event.wrong);
     });
 
     return quizDown;
@@ -56,14 +55,19 @@ export default function Quiz(props) {
     }
   }
 
+  const generateQuizId = (name: string) => {
+
+    let page = window.location.pathname;
+    page = page.replace("/robotframework-RFCP-syllabus/", ""); // Remove beginning of the url
+    
+    let id = page.replace("docs/", "") + "#" + name.replace(" ", "+");
+    id = id.toLocaleLowerCase();
+
+    return id;
+  }
+
   useEffect(() => {
-
-
     // Add quiz to the central storage
-    let currentPage = window.location.pathname;
-    currentPage = currentPage.replace("/robotframework-RFCP-syllabus/docs/", ""); // Remove beginning of the url
-    currentPage = currentPage.replace("/", ".")
-    addQuiz(currentPage, props.name);
 
     // To set the color scheme of quizdown
     document.documentElement.style.setProperty('--quizdownPrimaryColor', "var(--ifm-color-primary)");
@@ -76,12 +80,13 @@ export default function Quiz(props) {
 
     startQuiz();
     setColorsDependingOnTheme();
-    return () => observer.disconnect();
-
-  });
+    return () => {
+      observer.disconnect();
+    };
+  }, [props.question]); // Add dependency array with props.question
 
   return (
-    < span id="quizDownContainer" className='quizdown'>
-    </span >
+    <span id="quizDownContainer" className='quizdown'>
+    </span>
   );
 }

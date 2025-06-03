@@ -52,9 +52,13 @@ function findComponentUsage(rootDir, componentName) {
     // Remove file ending
     const page = path.relative(cwd, file).split(".")[0];
 
-    
     matches.forEach((match) => {
-      const id = page.replace("docs/", "") + "#" + match.name.replace(" ", "+");
+      let id = page.replace("docs/", "") + "#" + match.name.replace(" ", "+");
+
+      // Remove numbers followed by an underscore (e.g., '03_' becomes '')
+      id = id.replace(/\b\d+_/g, "");
+
+      id = id.toLocaleLowerCase();
       results.push({
         page: page,
         name: match.name,
