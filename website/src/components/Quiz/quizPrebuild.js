@@ -70,6 +70,29 @@ function findComponentUsage(rootDir, componentName) {
   return results;
 }
 
+function organizeQuizzesByPage(components) {
+  const quizPages = {};
+  
+  for (const component of components) {
+    const pagePath = component.page;
+    
+    if (!quizPages[pagePath]) {
+      quizPages[pagePath] = {
+        id: pagePath.replace(/\//g, "-"),
+        name: pagePath.split("/").pop().replace(/^\d+_/, ""),
+        quizzes: []
+      };
+    }
+    
+    quizPages[pagePath].quizzes.push({
+      id: component.id,
+      name: component.name
+    });
+  }
+  
+  return Object.values(quizPages);
+}
+
 
 function writeComponentListToFile(components, outputFilePath) {
   const date = new Date().toLocaleString();
@@ -78,28 +101,25 @@ function writeComponentListToFile(components, outputFilePath) {
 * Generated on: ${date}
 */
 
+export interface QuizPage {
+  id: string;
+  name: string;
+  quizzes: QuizComponent[];
+}
+
 export interface QuizComponent {
   id: string | null;
-  page: string;
   name: string;
 }
 
-export const quizComponents: QuizComponent[] = [\n`;
+`;
 
-  const items = components.map(
-    ({ page, name, id }) =>
-      `  {
-    page: '${page}',
-    name: '${name}',
-    id: '${id}',
-  }`
-  );
+  const quizPages = organizeQuizzesByPage(components);
+  const content = `export const quizPages: QuizPage[] = ${JSON.stringify(quizPages, null, 2)};`;
 
-  const footer = `\n];\n`;
-
-  const fullContent = header + items.join(',\n') + footer;
+  const fullContent = header + content + '\n';
   fs.writeFileSync(outputFilePath, fullContent, 'utf-8');
-  console.log(`Generated ${outputFilePath} with ${components.length} components.`);
+  console.log(`Generated ${outputFilePath} with ${quizPages.length} quiz pages and ${components.length} total quizzes.`);
 }
 
 const componentName = 'Quiz';
