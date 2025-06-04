@@ -1,7 +1,7 @@
 import React from "react";
 import Link from '@docusaurus/Link';
 import { QuizPage } from '@site/src/components/Quiz/quizComponents';
-import './sidebar.css'
+import './resultCard.css'
 
 const QuizResultSidebar: React.FC = (props: any) => {
     const isItemActive = (id: string) => {

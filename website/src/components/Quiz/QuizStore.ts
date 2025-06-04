@@ -17,6 +17,7 @@ interface QuizResult {
 interface Quiz {
   quiz: QuizResult[];
   addQuizResult: (quizId: string, numberOfQuestions: number, solved: number, right: number, wrong: number) => string;
+  getQuizResults: (id: string) => QuizResult[];
 }
 
 
@@ -30,9 +31,9 @@ const useQuizStore = create<Quiz>()(
       addQuizResult: (quizId: string, numberOfQuestions: number, solved: number, right: number, wrong: number): string => {
         const state = get();
 
-        const id : string = self.crypto.randomUUID();;
+        const id: string = self.crypto.randomUUID();;
 
-        const timestamp =  new Date().toISOString();
+        const timestamp = new Date().toISOString();
 
         // Otherwise add the new quiz
         set({
@@ -55,6 +56,13 @@ const useQuizStore = create<Quiz>()(
         return id;
       },
 
+      getQuizResults: (quizId: string): QuizResult[] => {
+        const state = get();
+        return state.quiz.filter((value) => {
+          console.log(value);
+          return value.quizId === quizId;
+        });
+      }
     }),
     {
       name: 'quiz-results', // unique name for localStorage

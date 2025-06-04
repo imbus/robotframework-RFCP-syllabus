@@ -58,7 +58,7 @@ function findComponentUsage(rootDir, componentName) {
       // Remove numbers followed by an underscore (e.g., '03_' becomes '')
       id = id.replace(/\b\d+_/g, "");
 
-      id = id.toLocaleLowerCase();
+      id = id.toLowerCase();
       results.push({
         page: page,
         name: match.name,
