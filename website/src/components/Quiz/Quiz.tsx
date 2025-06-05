@@ -1,10 +1,11 @@
 // @ts-ignore
-// eslint-disable @typescript-eslint/no-var-requires
+// eslint-disable @typescript-eslint/eslint/no-var-requires
 
 import React from 'react';
 import { useEffect } from 'react';
 import 'quizdown-extended'
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 import useQuizStore from './QuizStore';
 import hljsDefineRobot from '../../robot';
@@ -24,12 +25,12 @@ export default function Quiz(props) {
     const config = {
       startOnLoad: true,          // detect and convert all div html elements with class quizdown
       shuffleAnswers: true,       // shuffle answers for each question
-      shuffleQuestions: true,    // shuffle questions for each quiz
-      nQuestions: undefined,       // display n questions at random, if shuffleQuestions is true
+      shuffleQuestions: true,     // shuffle questions for each quiz
+      nQuestions: undefined,      // display n questions at random, if shuffleQuestions is true
       primaryColor: 'var(--quizdownPrimaryColor)',  // primary CSS color
       secondaryColor: 'var(--quizdownSecondaryColor)',  // secondary CSS color
       textColor: 'var(--quizdownTextColor)',         // text color of some elements
-      buttonColor: 'var(--quizdownSecondaryColor)',          // The background color of the buttons
+      buttonColor: 'var(--quizdownSecondaryColor)',  // The background color of the buttons
       locale: null,               // language of the user interface (auto-detect per default)
       enableRetry: true           // allow the user to resubmit answers
     };
@@ -72,7 +73,10 @@ export default function Quiz(props) {
   }
 
   const generateResultLink = () => {
-    return resultBaseUrl + "#" +generateQuizId(props.name);
+    if (ExecutionEnvironment.canUseDOM) {
+    return resultBaseUrl + "#" + generateQuizId(props.name);
+    } 
+    return "#";
   }
 
   useEffect(() => {
