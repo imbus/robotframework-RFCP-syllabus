@@ -45,12 +45,17 @@ function findComponentUsage(rootDir, componentName) {
 
   const results = [];
 
+
   for (const file of files) {
     const content = fs.readFileSync(file, 'utf-8');
     const matches = extractComponentProps(content, componentName);
 
     // Remove file ending
-    const page = path.relative(cwd, file).split(".")[0];
+    const pagePath = path.relative(cwd, file).split(".")[0];
+
+
+    const pageParts = pagePath.split("/");
+    const page = removeFollowingElementsInArray(pageParts);
 
     matches.forEach((match) => {
       let id = page.replace("docs/", "") + "#" + match.name.replace(" ", "+");
@@ -72,10 +77,10 @@ function findComponentUsage(rootDir, componentName) {
 
 function organizeQuizzesByPage(components) {
   const quizPages = {};
-  
+
   for (const component of components) {
     const pagePath = component.page;
-    
+
     if (!quizPages[pagePath]) {
       quizPages[pagePath] = {
         id: pagePath.replace(/\//g, "-"),
@@ -83,13 +88,13 @@ function organizeQuizzesByPage(components) {
         quizzes: []
       };
     }
-    
+
     quizPages[pagePath].quizzes.push({
       id: component.id,
       name: component.name
     });
   }
-  
+
   return Object.values(quizPages);
 }
 
@@ -120,6 +125,21 @@ export interface QuizComponent {
   const fullContent = header + content + '\n';
   fs.writeFileSync(outputFilePath, fullContent, 'utf-8');
   console.log(`Generated ${outputFilePath} with ${quizPages.length} quiz pages and ${components.length} total quizzes.`);
+}
+
+function removeFollowingElementsInArray(arr) {
+  let result = [];
+  let lastValue = null;
+
+  for (let item of arr) {
+    const lowerItem = item.toLowerCase();
+    if (lowerItem !== lastValue) {
+      result.push(item);
+      lastValue = lowerItem;
+    }
+  }
+
+  return result.join("/");
 }
 
 const componentName = 'Quiz';
