@@ -3,6 +3,7 @@ import Layout from '@theme/Layout';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import './quizResults.css';
 import useIsBrowser from '@docusaurus/useIsBrowser';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 import { quizPages } from '../components/Quiz/quizComponents';
 import QuizResultSidebar from '@site/src/components/Quiz/resultPage/sidebar';
@@ -42,6 +43,11 @@ export default function QuizResults() {
   }, [isBrowser]);
 
   useEffect(() => {
+
+    if (!isBrowser) {
+      return;
+    }
+
     if (!quizId) {
       setResults([]);
     } else {
