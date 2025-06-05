@@ -59,7 +59,6 @@ const useQuizStore = create<Quiz>()(
       getQuizResults: (quizId: string): QuizResult[] => {
         const state = get();
         return state.quiz.filter((value) => {
-          console.log(value);
           return value.quizId === quizId;
         });
       }

@@ -1,26 +1,64 @@
 import React from "react";
-import Link from '@docusaurus/Link';
-import { QuizPage } from '@site/src/components/Quiz/quizComponents';
-import './sidebar.css'
+import './resultCard.css';
 
 const QuizResultCard: React.FC = (props: any) => {
+  // Calculate success rate
+  const successRate = Math.round((props.result.results.right / props.result.results.numberOfQuestions) * 100);
 
-    console.log(props);
-    return (
-        <div className="card">
-            <div className="header">
-                <p>{props.result.id}</p>
+  // Format timestamp to a more readable format
+  const formatTimestamp = (timestamp: string) => {
+    try {
+      const date = new Date(timestamp);
+      return date.toLocaleString();
+    } catch (e) {
+      return timestamp;
+    }
+  };
+
+  return (
+    <div className="result-card">
+      <div className="result-card__header">
+        <h3 className="result-card__title">{formatTimestamp(props.result.timestamp)}</h3>
+        
+      </div>
+      
+      <div className="result-card__content">
+        <div className="result-card__score">
+          <div className="result-card__score-circle" style={
+            {
+              background: `conic-gradient(
+                var(--ifm-color-primary) ${successRate}%,
+                var(--ifm-color-emphasis-200) 0
+              )`
+            }
+          }>
+            <span className="result-card__score-text">{successRate}%</span>
+          </div>
+          <div className="result-card__stats">
+            <div className="result-card__stat">
+              <span className="result-card__stat-label">Right:</span>
+              <span className="result-card__stat-value result-card__stat-value--right">{props.result.results.right}</span>
             </div>
-            <div className="container">
-                <p>Time: {props.result.timestamp} <br/>
-                QuizId: {props.result.quizId} <br/>
-                NumberOfQuestions: {props.result.results.numberOfQuestions} <br/>
-                Solved: {props.result.results.solved} <br/>
-                Right: {props.result.results.right} <br/>
-                Wrong: {props.result.results.wrong}</p>
+            <div className="result-card__stat">
+              <span className="result-card__stat-label">Wrong:</span>
+              <span className="result-card__stat-value result-card__stat-value--wrong">{props.result.results.wrong}</span>
             </div>
+          </div>
         </div>
-    );
+        
+        <div className="result-card__details">
+          <div className="result-card__detail">
+            <span className="result-card__detail-label">Total Questions:</span>
+            <span className="result-card__detail-value">{props.result.results.numberOfQuestions}</span>
+          </div>
+          <div className="result-card__detail">
+            <span className="result-card__detail-label">Solved:</span>
+            <span className="result-card__detail-value">{props.result.results.solved}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default QuizResultCard;
