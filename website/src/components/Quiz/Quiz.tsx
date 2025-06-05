@@ -4,14 +4,19 @@
 import React from 'react';
 import { useEffect } from 'react';
 import 'quizdown-extended'
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 import useQuizStore from './QuizStore';
 import hljsDefineRobot from '../../robot';
 import 'quizdown-extended/public/build/extensions/quizdownHighlight';
+import './Quiz.css'
+
 
 export default function Quiz(props) {
-
+  
   const quiz = useQuizStore((state) => state.quiz);
   const addQuizResult = useQuizStore((state) => state.addQuizResult);
+  const resultBaseUrl = useBaseUrl('/quizResults');
 
   const startQuiz = () => {
     let node = document.querySelector('#quizDownContainer');
@@ -59,11 +64,15 @@ export default function Quiz(props) {
 
     let page = window.location.pathname;
     page = page.replace("/robotframework-RFCP-syllabus/", ""); // Remove beginning of the url
-    
+
     let id = page.replace("docs/", "") + "#" + name.replace(" ", "+");
     id = id.toLocaleLowerCase();
 
     return id;
+  }
+
+  const generateResultLink = () => {
+    return resultBaseUrl + "#" +generateQuizId(props.name);
   }
 
   useEffect(() => {
@@ -86,7 +95,10 @@ export default function Quiz(props) {
   }, [props.question]); // Add dependency array with props.question
 
   return (
-    <span id="quizDownContainer" className='quizdown'>
+    <span id="quizContainer">
+      <span id="quizDownContainer" className='quizdown'>
+      </span>
+      <a id="resultLink" href={ generateResultLink() } >View results</a>
     </span>
   );
 }
