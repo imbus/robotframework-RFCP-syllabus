@@ -1,3 +1,4 @@
+import Quiz from '@site/src/components/Quiz/Quiz';
 
 # 2.3 Executing Robot
 
