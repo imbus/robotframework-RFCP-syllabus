@@ -3,11 +3,18 @@ import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 const QuizComponent = React.lazy(() => import('./QuizComponent'));
 
-export default function QuizLoader(props) {
+interface QuizLoaderProps {
+  name: string;
+  question?: string;
+  src?: string;
+}
+
+export default function QuizLoader({ name, question, src }: QuizLoaderProps) {
   if (!ExecutionEnvironment.canUseDOM) return null;
+
   return (
-    <Suspense fallback={<div>Loading QuizComponent...</div>}>
-      <QuizComponent {...props} />
+    <Suspense fallback={<div>Loading Quiz...</div>}>
+      <QuizComponent name={name} question={question} src={src} />
     </Suspense>
   );
 }
